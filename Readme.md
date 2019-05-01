@@ -5,17 +5,63 @@ The input format is a DOT file (see https://en.wikipedia.org/wiki/DOT_(graph_des
 
 This project uses NetworkX (https://networkx.github.io) to handle graphs and reading/writing files. Also it needs pygraphviz to manage the DOT format (https://pygraphviz.github.io).
 
-The project is tested on python3 
+The project is tested on python3
 
 # Computed Metrics
-* Angular resolution
-* Average angular resolution
 * Crossings
-* Edge length unifromity
+* Edge length uniformity
 * Bounding box
 * Aspect ratio
 * Stress
 * Neighbors preservation
 
-## Future improvements (needed)
+_Labels metrics_
+* Labels total area
+* Labels total area to boundin box ratio
+
+
+##### Crossings
+Counts the number of edge crossings in the given layout. The technique checkes the
+intersection between any pair of edges, and returns the crossings number.
+
+The algorithm should be improved using a sweep-line technique.
+
+##### Edge length uniformity
+
+The Edge length uniformity corresponds to the normalized standard deviation of the edge length, i.e.:
+
+$$EU = \sqrt{\sum_{e \in E}\frac{(l_e - l_{avg})^2}{|E|l^2_{avg}}}$$
+
+##### Bounding box
+The bounding box computes the width and height of the given layout.
+
+
+##### Aspect Ratio
+The aspect ratio returns width/heigth of the layout
+
+
+
+##### Stress
+The stress is a well known measure for the energy of the layout of a graph drawing.
+It computes the difference betewwn the graph thoretic distance and the gemetric distance
+between any pair of vertices of the given graph.
+
+Since scaling a given layout changes the computed stress value, the computed value
+is the minimum value achievable fixing the layout, that is, the drawing is scaled before
+computing the stress measurement.
+
+$$ ST = \sum_{i,j \in V} w_{ij}(\parallel p_i - p_j \parallel - d_{ij})^2$$
+
+
+
+
+
+##### Neighbors preservation
+The neighbors preservation checks for each vertex how many neighbors are close to it
+in the given layout. This value is the range $[0, 1]$ such that 0 means that the adjacecies
+of the vertices are not respected in the layout while 1 means that all the neighbors of a vertex are close to it in the layout.
+
+
+
+### Future improvements (needed)
 Currently the crossing counting is rather slow, it checks each pair of edges. A better way to count the crossings, such as a sweep-line algorithm, would speed-up the computation.
