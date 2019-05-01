@@ -2,50 +2,64 @@
 # EU corresponds to the normalized standard deviation of the edge length.
 ##
 
-
-import pygraphviz as pgv
 import networkx as nx
 import math
 
-def compute_edge_length(edge):
 
-    s1,t1 = edge
+def avg_edge_length(G):
 
-    x_source1 = float(s1.attr['pos'].split(",")[0])
-    x_target1 = float(t1.attr['pos'].split(",")[0])
-
-    y_source1 = float(s1.attr['pos'].split(",")[1])
-    y_target1 = float(t1.attr['pos'].split(",")[1])
-
-    curr_length = math.sqrt((x_source1 - x_target1)**2 + (y_source1 - y_target1)**2)
-
-    return curr_length
-
-
-def avg_edge_length(edges):
+    '''
+    Computes the average edge length of the given graph layout <tt>G</tt>
+    '''
 
     sum_edge_length = 0.0
-    edge_count = len(edges)
 
-    for curr_id in range(0, edge_count):
-        curr_edge = edges[curr_id]
-        curr_length = compute_edge_length(curr_edge)
+    pos_dict = nx.get_node_attributes(G, 'pos')
+
+    for edge in nx.edges(G):
+
+        (s,t) = edge
+
+        x_source = float(pos_dict[s].split(",")[0])
+        x_target = float(pos_dict[t].split(",")[0])
+
+        y_source = float(pos_dict[s].split(",")[1])
+        y_target = float(pos_dict[t].split(",")[1])
+
+        curr_length = math.sqrt((x_source - x_target)**2 + (y_source - y_target)**2)
+
         sum_edge_length += curr_length
 
-    avg_edge_len = sum_edge_length/edge_count
+    edges_count = len(nx.edges(G))
+    avg_edge_len = sum_edge_length/edges_count
+
     return avg_edge_len
 
-def uniformity_edge_length(G):
 
-    edges = G.edges()
+
+def uniformity_edge_length(G):
+    '''
+    The Edge length uniformity corresponds to the normalized standard deviation of the edge length.
+    '''
+
+    edges = nx.edges(G)
     edge_count = len(edges)
-    avgEdgeLength = avg_edge_length(edges)
+    avgEdgeLength = avg_edge_length(G)
     tot_sum = 0.0
 
-    for curr_id in range(0, len(edges)):
+    pos_dict = nx.get_node_attributes(G, 'pos')
 
-        curr_edge = edges[curr_id]
-        curr_length = compute_edge_length(curr_edge)
+    for edge in edges:
+
+        (s,t) = edge
+
+        x_source = float(pos_dict[s].split(",")[0])
+        x_target = float(pos_dict[t].split(",")[0])
+
+        y_source = float(pos_dict[s].split(",")[1])
+        y_target = float(pos_dict[t].split(",")[1])
+
+        curr_length = math.sqrt((x_source - x_target)**2 + (y_source - y_target)**2)
 
         num = (curr_length-avgEdgeLength)**2
         den = edge_count*(avgEdgeLength**2)

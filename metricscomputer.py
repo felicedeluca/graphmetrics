@@ -1,7 +1,6 @@
 import sys
 import os
 
-import pygraphviz as pgv
 import networkx as nx
 from networkx.drawing.nx_agraph import write_dot
 from networkx.drawing.nx_agraph import read_dot as nx_read_dot
@@ -15,6 +14,8 @@ import uniformity_edge_length as uniedgelen
 import other_measures as othermeas
 import labelsmeas
 
+import upwardflow
+
 
 graphpath = sys.argv[1]
 outputTxtFile = sys.argv[2]
@@ -23,19 +24,19 @@ input_file_name = os.path.basename(graphpath)
 graph_name = input_file_name.split(".")[0]
 
 
-Gpgv = pgv.AGraph(graphpath)
 G = nx_read_dot(graphpath)
 G = nx.Graph(G)
 
 
 
-cr = True # crossings
+cr = False # crossings
 ue = True # edge length uniformity
-st = True # stress
-np = True # neighbors_preservation
+st = False # stress
+np = False # neighbors_preservation
 lblbb = False #label to boundingBox ratio
 lblarea = False #labels total area
-bb = True #bounding box
+bb = False #bounding box
+upflow = True #upward flow
 
 output_txt = "Metrics for " + graph_name + "\n"
 output_txt = nx.info(G) + "\n"
@@ -50,13 +51,13 @@ if cr:
     csv_head_line += "CR;"
     csv_line += str(crossings_val) + ";"
 
-if cr:
-    uniedgelen_val = uniedgelen.uniformity_edge_length(Gpgv)
+if ue:
+    uniedgelen_val = uniedgelen.uniformity_edge_length(G)
     output_txt += "UE: " + str(uniedgelen_val) + "\n"
     csv_head_line += "UE;"
     csv_line += str(uniedgelen_val) + ";"
 
-if cr:
+if st:
     stress_val = stress.stress(G)
     output_txt += "ST: " + str(stress_val) + "\n"
     csv_head_line += "ST;"
@@ -86,6 +87,12 @@ if bb:
     output_txt += "BB: " + str(bbox_val) + "\n"
     csv_head_line += "BB;"
     csv_line += str(bbox_val) + ";"
+
+if upflow:
+    upflow_val = upwardflow.compute_upwardflow(G)
+    output_txt += "upflow: " + str(upflow_val) + "\n"
+    csv_head_line += "upflow;"
+    csv_line += str(upflow_val) + ";"
 
 
 csv_head_line += "\n"
