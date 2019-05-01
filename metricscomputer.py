@@ -30,7 +30,7 @@ G = nx.Graph(G)
 
 
 cr = False # crossings
-ue = True # edge length uniformity
+ue = False # edge length uniformity
 st = False # stress
 np = False # neighbors_preservation
 lblbb = False #label to boundingBox ratio
