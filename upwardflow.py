@@ -29,6 +29,18 @@ def compute_edges_vects(G):
         y_source = float(pos_dict[source].split(",")[1])
         y_target = float(pos_dict[target].split(",")[1])
 
+        # The following check is to force the upwardness
+        # (if the edges vects) are inverted
+        if y_target < y_source:
+            x_temp = x_target
+            x_target = x_source
+            x_source = x_temp
+
+            y_temp = y_target
+            y_target = y_source
+            y_source = y_temp
+
+
         len = [x_source - x_target, y_source - y_target]
         norm = math.sqrt(len[0] ** 2 + len[1] ** 2)
         dir = [len[0]/norm, len[1]/norm]
@@ -71,5 +83,6 @@ def compute_upwardflow(G):
 
 
     flow = prods_sum/len(e_vects)
+    flow = round(flow, 3)
 
     return flow
