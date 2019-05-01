@@ -18,7 +18,8 @@ import upwardflow
 
 
 graphpath = sys.argv[1]
-outputTxtFile = sys.argv[2]
+cmds = sys.argv[2].split(",")
+outputTxtFile = sys.argv[3]
 
 input_file_name = os.path.basename(graphpath)
 graph_name = input_file_name.split(".")[0]
@@ -27,16 +28,14 @@ graph_name = input_file_name.split(".")[0]
 G = nx_read_dot(graphpath)
 G = nx.Graph(G)
 
-
-
-cr = False # crossings
-ue = False # edge length uniformity
-st = False # stress
-np = False # neighbors_preservation
-lblbb = False #label to boundingBox ratio
-lblarea = False #labels total area
-bb = False #bounding box
-upflow = True #upward flow
+cr = ('cr' in cmds) # crossings
+ue =  ('ue' in cmds) # edge length uniformity
+st =  ('st' in cmds) # stress
+np =  ('np' in cmds) # neighbors_preservation
+lblbb =  ('lblbb' in cmds) #label to boundingBox ratio
+lblarea =  ('lblarea' in cmds) #labels total area
+bb =  ('bb' in cmds) #bounding box
+upflow =  ('upflow' in cmds) #upward flow
 
 output_txt = "Metrics for " + graph_name + "\n"
 output_txt = nx.info(G) + "\n"

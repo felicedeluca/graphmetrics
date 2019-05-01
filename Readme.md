@@ -67,5 +67,29 @@ of the vertices are not respected in the layout while 1 means that all the neigh
 
 
 
+# Usage
+
+    python3 metricscomputer.py {input_graph_path.dot} {desired_metrics_comma_separated} {input_metrics_path.csv}
+
+{input_graph_path.dot} : full path of the input graph
+
+{desired_metrics_comma_separated} :
+  possible values are  
+
+    cr        : for crossings;
+    ue        : for edge length uniformity;
+    st        : for stress;
+    np        : for neighbors_preservation;
+    lblbb     : for label to boundingBox ratio;
+    lblarea   : for labels total area;
+    bb        : for bounding box;
+    upflow    : for upward flow;
+
+example
+
+*"cr,st,ue,np"* for crossings, stress, edge length uniformity and neighbors preservation
+
+{input_metrics_path.csv} : full path for the output file with computed metrics. The file is created if does not exist
+
 ### Future improvements (needed)
 Currently the crossing counting is rather slow, it checks each pair of edges. A better way to count the crossings, such as a sweep-line algorithm, would speed-up the computation.
