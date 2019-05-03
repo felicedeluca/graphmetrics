@@ -1,6 +1,7 @@
 import networkx as nx
 
 import math
+import decimal
 
 def boundingBox(G):
 
@@ -45,6 +46,8 @@ def labelsBBRatio(G):
     '''
     Computes the ratio between the minimum area occupied by non overlapping labels and
     the actual area of the drawings.
+
+    Return ratio in scientific notation
     '''
 
     bb = boundingBox(G)
@@ -53,6 +56,9 @@ def labelsBBRatio(G):
     l_area = totLabelsArea(G)
 
     aspectRatio = l_area/bb_area
+
+
+    aspectRatio = '%.2E' % decimal.Decimal(aspectRatio)
 
     return aspectRatio
 

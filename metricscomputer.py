@@ -18,15 +18,24 @@ import upwardflow
 
 
 graphpath = sys.argv[1]
-cmds = sys.argv[2].split(",")
-outputTxtFile = sys.argv[3]
+outputTxtFile = sys.argv[2]
 
 input_file_name = os.path.basename(graphpath)
 graph_name = input_file_name.split(".")[0]
 
-
 G = nx_read_dot(graphpath)
 G = nx.Graph(G)
+
+
+cmds=[]
+all = False
+
+if len(sys.argv) > 3 :
+    cmds = sys.argv[3].split(",")
+else:
+    # Compute all measures
+    all = True
+
 
 cr = ('cr' in cmds) # crossings
 ue =  ('ue' in cmds) # edge length uniformity
@@ -44,44 +53,44 @@ csv_head_line = "filename;"
 csv_line = graph_name+";"
 
 
-if cr:
+if cr or all:
     crossings_val = crossings.count_crossings(G)
     output_txt +=  "CR: " + str(crossings_val) + "\n"
     csv_head_line += "CR;"
     csv_line += str(crossings_val) + ";"
 
-if ue:
+if ue or all::
     uniedgelen_val = uniedgelen.uniformity_edge_length(G)
     output_txt += "UE: " + str(uniedgelen_val) + "\n"
     csv_head_line += "UE;"
     csv_line += str(uniedgelen_val) + ";"
 
-if st:
+if st or all::
     stress_val = stress.stress(G)
     output_txt += "ST: " + str(stress_val) + "\n"
     csv_head_line += "ST;"
     csv_line += str(stress_val) + ";"
 
 
-if np:
+if np or all::
     neigpres_val = neigpres.compute_neig_preservation(G)
     output_txt += "NP: " + str(neigpres_val) + "\n"
     csv_head_line += "NP;"
     csv_line += str(neigpres_val) + ";"
 
-if lblbb:
+if lblbb or all::
     labelsBBRatio_val = labelsmeas.labelsBBRatio(G)
     output_txt += "lblbb: " + str(labelsBBRatio_val) + "\n"
     csv_head_line += "lblbb;"
     csv_line += str(labelsBBRatio_val) + ";"
 
-if lblarea:
+if lblarea or all::
     totLabelsArea_val = labelsmeas.totLabelsArea(G)
     output_txt += "lblarea: " + str(totLabelsArea_val) + "\n"
     csv_head_line += "lblarea;"
     csv_line += str(totLabelsArea_val) + ";"
 
-if bb:
+if bb or all::
     bbox_val = othermeas.boundingBox(G)
     output_txt += "BB: " + str(bbox_val) + "\n"
     csv_head_line += "BB;"
