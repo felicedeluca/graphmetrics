@@ -377,7 +377,8 @@ def count_crossings(G, edges_to_compare=None, stop_when_found=False, ignore_labe
     <tt>stop_when_found<\tt> is set to True.
     If the vertices have labels with given height and width the crossings that occur
     below the labels can be ignored if the boolean value <tt>ignore_label_edge_cr<\tt>
-    is set to True
+    is set to True.
+    Return a list of crossings where each element has the crossing edge and the intersection point.
     '''
 
 
