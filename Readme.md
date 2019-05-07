@@ -25,8 +25,18 @@ _Labels metrics_
 
 
 ##### Crossings
-Counts the number of edge crossings in the given layout. The technique checkes the
+Counts the number of edge crossings in the given layout. The technique checks the
 intersection between any pair of edges, and returns the crossings number.
+
+It Counts the crossings of the given graph G. The crossing count can
+be executed only on the given list of edges of G passed as input in
+edges_to_compare.
+Also the execution can stop as soon as a crossing is found if the boolean value
+stop_when_found is set to True.
+If the vertices have labels with given height and width the crossings that occur
+below the labels can be ignored if the boolean value ignore_label_edge_cr
+is set to True.
+Return a list of crossings where each element has the crossing edge and the intersection point.
 
 The algorithm should be improved using a sweep-line technique.
 
