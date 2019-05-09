@@ -2,16 +2,6 @@ import networkx as nx
 import math
 
 
-def nodesArray(Gnx):
-
-    nodes = []
-
-    for sourceStr in nx.nodes(Gnx):
-
-        nodes.append(sourceStr)
-
-    return nodes
-
 def euclidean_distance(source, target):
 
     x_source1 = float(source['pos'].split(",")[0])
@@ -24,12 +14,9 @@ def euclidean_distance(source, target):
 
     return geomDistance
 
+def scale_graph(G, alpha):
 
-
-
-def scale_graph(GD, alpha):
-
-    H = GD.copy()
+    H = G.copy()
 
     for currVStr in nx.nodes(H):
 
@@ -45,13 +32,11 @@ def scale_graph(GD, alpha):
 
     return H
 
-
-def computeScalingFactor(S, G=None):
-
+def computeScalingFactor(S, all_sp):
     num = 0
     den = 0
 
-    nodes = nodesArray(S)
+    nodes = list(nx.nodes(S))
 
     for i in range(0, len(nodes)):
 
@@ -69,10 +54,7 @@ def computeScalingFactor(S, G=None):
 
             graph_theoretic_distance = 0
 
-            if(G is None):
-                graph_theoretic_distance = nx.shortest_path_length(S, sourceStr, targetStr)
-            else:
-                graph_theoretic_distance = nx.shortest_path_length(G, sourceStr, targetStr)
+            graph_theoretic_distance = len(all_sp[sourceStr][targetStr])-1
 
             geomDistance = euclidean_distance(source, target)
 
@@ -94,19 +76,35 @@ def stress(S, G=None):
     is passed it computes the stress of the layout <tt>S</tt>
     with respect the graph distances on <tt>G</tt>'''
 
+
+    # converting weights in float
+    all_weights_n = nx.get_node_attributes(S, "weight")
+    for nk in all_weights_n.keys():
+        all_weights_n[nk] = float(all_weights_n[nk])
+    nx.set_node_attributes(S, all_weights_n, "weight")
+
+    all_weights_e = nx.get_edge_attributes(S, "weight")
+    for ek in all_weights_e.keys():
+        all_weights_e[ek] = float(all_weights_e[ek])
+    nx.set_edge_attributes(S, all_weights_e, "weight")
+
+
     S_original = S.copy()
 
     alpha = 1
 
-    if(G is None):
-        alpha = computeScalingFactor(S_original)
-    else:
-        alpha = computeScalingFactor(S, G)
+    all_sp = None
 
+    if(G is None):
+        all_sp = nx.shortest_path(S, weight="weight")
+    else:
+        all_sp = nx.shortest_path(G, weight="weight")
+
+    alpha = computeScalingFactor(S_original, all_sp)
 
     S = scale_graph(S_original, alpha)
 
-    vertices = nodesArray(S)
+    vertices = list(nx.nodes(S))
 
     stress = 0
 
@@ -120,13 +118,7 @@ def stress(S, G=None):
             targetStr =  vertices[j]
             target = S.nodes[targetStr]
 
-            graph_theoretic_distance = 0
-
-            if(G is None):
-                graph_theoretic_distance = nx.shortest_path_length(S, sourceStr, targetStr)
-            else:
-                graph_theoretic_distance = nx.shortest_path_length(G, sourceStr, targetStr)
-
+            graph_theoretic_distance = len(all_sp[sourceStr][targetStr])-1
             eu_dist = euclidean_distance(source, target)
 
             if (graph_theoretic_distance <= 0):

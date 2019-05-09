@@ -30,7 +30,7 @@ def find_graph_closest_nodes(Gnx, r_g, sourceStr):
         if(target == source):
             continue
 
-        graph_theoretic_distance = len(nx.shortest_path(Gnx, sourceStr, targetStr))
+        graph_theoretic_distance = len(nx.shortest_path(Gnx, sourceStr, targetStr, weight="weight"))
 
         if(graph_theoretic_distance <= r_g):
             closest.append(targetStr)
@@ -68,25 +68,37 @@ def find_space_closest_nodes(Gnx, k_i, sourceStr):
 
 
 
-def compute_neig_preservation(Gnx):
+def compute_neig_preservation(G):
+
+    # converting weights in float
+    all_weights_n = nx.get_node_attributes(G, "weight")
+    for nk in all_weights_n.keys():
+        all_weights_n[nk] = float(all_weights_n[nk])
+    nx.set_node_attributes(G, all_weights_n, "weight")
+
+    all_weights_e = nx.get_edge_attributes(G, "weight")
+    for ek in all_weights_e.keys():
+        all_weights_e[ek] = float(all_weights_e[ek])
+    nx.set_edge_attributes(G, all_weights_e, "weight")
+    all_sp = nx.shortest_path(G, weight="weight")
 
     r_g = 3
 
 
-    vertices = list(nx.nodes(Gnx))
+    vertices = list(nx.nodes(G))
 
     sum = 0
 
     for i in range(0, len(vertices)):
 
         sourceStr = vertices[i]
-        source = Gnx.node[sourceStr]
+        source = G.node[sourceStr]
 
-        graph_neighbors = find_graph_closest_nodes(Gnx, r_g, sourceStr)
+        graph_neighbors = find_graph_closest_nodes(G, r_g, sourceStr)
 
         k_i = len(graph_neighbors)
 
-        space_neigobors = find_space_closest_nodes(Gnx, k_i, sourceStr)
+        space_neigobors = find_space_closest_nodes(G, k_i, sourceStr)
 
 
         vertices_intersection = set(graph_neighbors).intersection(set(space_neigobors))
