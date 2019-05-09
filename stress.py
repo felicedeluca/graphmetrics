@@ -98,6 +98,16 @@ def stress(S, G=None):
     if(G is None):
         all_sp = nx.shortest_path(S, weight="weight")
     else:
+        # converting weights in float
+        all_weights_n = nx.get_node_attributes(G, "weight")
+        for nk in all_weights_n.keys():
+            all_weights_n[nk] = float(all_weights_n[nk])
+        nx.set_node_attributes(G, all_weights_n, "weight")
+
+        all_weights_e = nx.get_edge_attributes(G, "weight")
+        for ek in all_weights_e.keys():
+            all_weights_e[ek] = float(all_weights_e[ek])
+        nx.set_edge_attributes(G, all_weights_e, "weight")
         all_sp = nx.shortest_path(G, weight="weight")
 
     alpha = computeScalingFactor(S_original, all_sp)
