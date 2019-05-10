@@ -2,6 +2,24 @@ import pygraphviz as pgv
 import networkx as nx
 import math
 
+# import numpy as np
+# from numpy import random
+# from scipy.spatial import distance
+# import time
+#
+# def euclidean_closest_nodes(node, nodes, k_i):
+#     '''
+#     Computes the distance matrix between point.
+#     '''
+#
+#     node = np.array(node)
+#     nodes = np.array(nodes)
+#
+#     distances = distance.cdist(node, nodes)
+#     indices = np.argpartition(distances, 3)
+#
+#     return indices
+
 
 def euclidean_distance(source, target):
     x_source1 = float(source['pos'].split(",")[0])
@@ -15,26 +33,17 @@ def euclidean_distance(source, target):
     return geomDistance
 
 
-def find_graph_closest_nodes(Gnx, r_g, sourceStr):
-
+def find_graph_closest_nodes(G, r_g, sourceStr, all_sp):
     closest = []
-
-    vertices = list(nx.nodes(Gnx))
-    source = Gnx.node[sourceStr]
-
-    for i in range(0, len(vertices)):
-
-        targetStr = vertices[i]
-        target = Gnx.node[targetStr]
-
-        if(target == source):
+    # vertices = list(nx.nodes(G))
+    # source = G.node[sourceStr]
+    # for i in range(0, len(vertices)):
+    for target in nx.nodes(G):
+        if(target == sourceStr):
             continue
-
-        graph_theoretic_distance = len(nx.shortest_path(Gnx, sourceStr, targetStr, weight="weight"))
-
+        graph_theoretic_distance = len(all_sp[sourceStr][target])-1
         if(graph_theoretic_distance <= r_g):
-            closest.append(targetStr)
-
+            closest.append(target)
     return closest
 
 
@@ -68,24 +77,23 @@ def find_space_closest_nodes(Gnx, k_i, sourceStr):
 
 
 
-def compute_neig_preservation(G, weighted=True):
+def compute_neig_preservation(G, weighted=True, all_sp=None):
 
-    # converting weights in float
-    all_weights_n = nx.get_node_attributes(G, "weight")
-    for nk in all_weights_n.keys():
-        all_weights_n[nk] = float(all_weights_n[nk])
-    nx.set_node_attributes(G, all_weights_n, "weight")
+    if all_sp is None:
+        if(weighted):
+            # converting weights in float
+            all_weights_n = nx.get_node_attributes(G, "weight")
+            for nk in all_weights_n.keys():
+                all_weights_n[nk] = float(all_weights_n[nk])
+            nx.set_node_attributes(G, all_weights_n, "weight")
 
-    all_weights_e = nx.get_edge_attributes(G, "weight")
-    for ek in all_weights_e.keys():
-        all_weights_e[ek] = float(all_weights_e[ek])
-    nx.set_edge_attributes(G, all_weights_e, "weight")
-
-    all_sp = None
-    if(weighted):
-        all_sp = nx.shortest_path(G, weight="weight")
-    else:
-        all_sp = nx.shortest_path(G)
+            all_weights_e = nx.get_edge_attributes(G, "weight")
+            for ek in all_weights_e.keys():
+                all_weights_e[ek] = float(all_weights_e[ek])
+            nx.set_edge_attributes(G, all_weights_e, "weight")
+            all_sp = nx.shortest_path(G, weight="weight")
+        else:
+            all_sp = nx.shortest_path(G)
 
     r_g = 3
 
@@ -94,15 +102,27 @@ def compute_neig_preservation(G, weighted=True):
 
     sum = 0
 
+    # all_pos = nx.get_node_attributes(G, "pos")
+    # nodes_positions = {}
+    # for v in all_pos.keys():
+    #     x = float(all_pos[v].split(",")[0])
+    #     y = float(all_pos[v].split(",")[1])
+    #     nodes_positions[v] = (x, y)
+
     for i in range(0, len(vertices)):
 
         sourceStr = vertices[i]
         source = G.node[sourceStr]
 
-        graph_neighbors = find_graph_closest_nodes(G, r_g, sourceStr)
+
+        graph_neighbors = find_graph_closest_nodes(G, r_g, sourceStr, all_sp)
 
         k_i = len(graph_neighbors)
 
+        # x = float(all_pos[sourceStr].split(",")[0])
+        # y = float(all_pos[sourceStr].split(",")[1])
+        # curr_node_pos = [(x, y)]
+        # space_neigobors_new = euclidean_closest_nodes([curr_node_pos], list(nodes_positions.values()), k_i)
         space_neigobors = find_space_closest_nodes(G, k_i, sourceStr)
 
 
@@ -118,17 +138,3 @@ def compute_neig_preservation(G, weighted=True):
     pres = round(pres, 3)
 
     return pres
-
-
-def neig_preservation_multilevel_ratio(GD_prev, GD_curr):
-
-    GD_curr_with_old_positions = GD_curr.copy()
-
-    vertices_old_pos = nx.get_node_attributes(GD_prev, 'pos')
-
-    nx.set_node_attributes(GD_curr_with_old_positions, vertices_old_pos, 'pos')
-
-    neig_pres_curr = compute_neig_preservation(GD_curr)
-    neig_pres_curr_old_pos = compute_neig_preservation(GD_curr_with_old_positions)
-
-    return neig_pres_curr/neig_pres_curr_old_pos
