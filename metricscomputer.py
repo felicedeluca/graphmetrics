@@ -44,6 +44,7 @@ np =  ('np' in cmds) # neighbors_preservation
 lblbb =  ('lblbb' in cmds) #label to boundingBox ratio
 lblarea =  ('lblarea' in cmds) #labels total area
 bb =  ('bb' in cmds) #bounding box
+lblo = ('lblo' in cmds) #labels overlaping area
 upflow =  ('upflow' in cmds) #upward flow
 
 output_txt = "Metrics for " + graph_name + "\n"
@@ -73,7 +74,7 @@ if ue or all:
 
 
 if st or all:
-    stress_val = stress.stress(G)
+    stress_val = stress.stress(G, weighted=False)
     output_line =  "ST: " + str(stress_val) + "\n"
     output_txt += output_line
     csv_head_line += "ST;"
@@ -83,7 +84,7 @@ if st or all:
 
 
 if np or all:
-    neigpres_val = neigpres.compute_neig_preservation(G)
+    neigpres_val = neigpres.compute_neig_preservation(G, weighted=False)
     output_line =  "NP: " + str(neigpres_val) + "\n"
     output_txt += output_line
     csv_head_line += "NP;"
@@ -114,6 +115,14 @@ if bb or all:
     output_txt += output_line
     csv_head_line += "BB;"
     csv_line += str(bbox_val) + ";"
+    print(output_line)
+
+if lblo or all:
+    value = labelsmeas.totLabelsOverlappingArea(G)
+    output_line =  "lblo: " + str(value) + "\n"
+    output_txt += output_line
+    csv_head_line += "lblo;"
+    csv_line += str(value) + ";"
     print(output_line)
 
 if upflow:
