@@ -71,7 +71,7 @@ def computeScalingFactor(S, all_sp):
     return scale
 
 
-def stress(S, G=None):
+def stress(S, G=None, weighted=True):
     '''Computes the strees of the layout <tt>S</tt> if the parameter <tt>G</tt>
     is passed it computes the stress of the layout <tt>S</tt>
     with respect the graph distances on <tt>G</tt>'''
@@ -96,7 +96,10 @@ def stress(S, G=None):
     all_sp = None
 
     if(G is None):
-        all_sp = nx.shortest_path(S, weight="weight")
+        if(weighted):
+            all_sp = nx.shortest_path(S, weight="weight")
+        else:
+            all_sp = nx.shortest_path(S)
     else:
         # converting weights in float
         all_weights_n = nx.get_node_attributes(G, "weight")
@@ -108,7 +111,12 @@ def stress(S, G=None):
         for ek in all_weights_e.keys():
             all_weights_e[ek] = float(all_weights_e[ek])
         nx.set_edge_attributes(G, all_weights_e, "weight")
-        all_sp = nx.shortest_path(G, weight="weight")
+
+        all_sp = None
+        if(weighted):
+            all_sp = nx.shortest_path(G, weight="weight")
+        else:
+            all_sp = nx.shortest_path(G)
 
     alpha = computeScalingFactor(S_original, all_sp)
 

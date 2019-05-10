@@ -24,7 +24,7 @@ input_file_name = os.path.basename(graphpath)
 graph_name = input_file_name.split(".")[0]
 
 G = nx_read_dot(graphpath)
-G = nx.Graph(G)
+G = nx.Graph(G) #removes multiple edges
 
 
 cmds=[]
@@ -48,6 +48,7 @@ upflow =  ('upflow' in cmds) #upward flow
 
 output_txt = "Metrics for " + graph_name + "\n"
 output_txt = nx.info(G) + "\n"
+print(output_txt)
 
 csv_head_line = "filename;"
 csv_line = graph_name+";"
@@ -56,59 +57,79 @@ csv_line = graph_name+";"
 if cr or all:
     crss = crossings.count_crossings(G, ignore_label_edge_cr=True)
     crossings_val = len(crss)
-    output_txt +=  "CR: " + str(crossings_val) + "\n"
+    output_line = "CR: " + str(crossings_val) + "\n"
+    output_txt += output_line
     csv_head_line += "CR;"
     csv_line += str(crossings_val) + ";"
+    print(output_line)
 
 if ue or all:
     uniedgelen_val = uniedgelen.uniformity_edge_length(G)
-    output_txt += "UE: " + str(uniedgelen_val) + "\n"
+    output_line =  "UE: " + str(uniedgelen_val) + "\n"
+    output_txt += output_line
     csv_head_line += "UE;"
     csv_line += str(uniedgelen_val) + ";"
+    print(output_line)
+
 
 if st or all:
     stress_val = stress.stress(G)
-    output_txt += "ST: " + str(stress_val) + "\n"
+    output_line =  "ST: " + str(stress_val) + "\n"
+    output_txt += output_line
     csv_head_line += "ST;"
     csv_line += str(stress_val) + ";"
+    print(output_line)
+
 
 
 if np or all:
     neigpres_val = neigpres.compute_neig_preservation(G)
-    output_txt += "NP: " + str(neigpres_val) + "\n"
+    output_line =  "NP: " + str(neigpres_val) + "\n"
+    output_txt += output_line
     csv_head_line += "NP;"
     csv_line += str(neigpres_val) + ";"
+    print(output_line)
 
 if lblbb or all:
     labelsBBRatio_val = labelsmeas.labelsBBRatio(G)
-    output_txt += "lblbb: " + str(labelsBBRatio_val) + "\n"
+    output_line =  "lblbb: " + str(labelsBBRatio_val) + "\n"
+    output_txt += output_line
     csv_head_line += "lblbb;"
     csv_line += str(labelsBBRatio_val) + ";"
+    print(output_line)
+
 
 if lblarea or all:
     totLabelsArea_val = labelsmeas.totLabelsArea(G)
-    output_txt += "lblarea: " + str(totLabelsArea_val) + "\n"
+    output_line =  "lblarea: " + str(totLabelsArea_val) + "\n"
+    output_txt += output_line
     csv_head_line += "lblarea;"
     csv_line += str(totLabelsArea_val) + ";"
+    print(output_line)
+
 
 if bb or all:
     bbox_val = othermeas.boundingBox(G)
-    output_txt += "BB: " + str(bbox_val) + "\n"
+    output_line =  "BB: " + str(bbox_val) + "\n"
+    output_txt += output_line
     csv_head_line += "BB;"
     csv_line += str(bbox_val) + ";"
+    print(output_line)
 
 if upflow:
     upflow_val = upwardflow.compute_upwardflow(G)
-    output_txt += "upflow: " + str(upflow_val) + "\n"
+    output_line =  "upflow: " + str(upflow_val) + "\n"
+    output_txt += output_line
     csv_head_line += "upflow;"
     csv_line += str(upflow_val) + ";"
+    print(output_line)
 
 
 csv_head_line += "\n"
 csv_line += "\n"
 
 
-print(output_txt)
+# print(output_txt)
 
 exists = os.path.isfile(outputTxtFile)
 if not exists:

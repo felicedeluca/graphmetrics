@@ -68,7 +68,7 @@ def find_space_closest_nodes(Gnx, k_i, sourceStr):
 
 
 
-def compute_neig_preservation(G):
+def compute_neig_preservation(G, weighted=True):
 
     # converting weights in float
     all_weights_n = nx.get_node_attributes(G, "weight")
@@ -80,7 +80,12 @@ def compute_neig_preservation(G):
     for ek in all_weights_e.keys():
         all_weights_e[ek] = float(all_weights_e[ek])
     nx.set_edge_attributes(G, all_weights_e, "weight")
-    all_sp = nx.shortest_path(G, weight="weight")
+
+    all_sp = None
+    if(weighted):
+        all_sp = nx.shortest_path(G, weight="weight")
+    else:
+        all_sp = nx.shortest_path(G)
 
     r_g = 3
 
