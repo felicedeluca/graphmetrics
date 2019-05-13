@@ -79,6 +79,8 @@ def find_space_closest_nodes(Gnx, k_i, sourceStr):
 
 def compute_neig_preservation(G, weighted=True, all_sp=None):
 
+    G = nx.Graph(G)
+
     if all_sp is None:
         if(weighted):
             # converting weights in float
@@ -96,7 +98,6 @@ def compute_neig_preservation(G, weighted=True, all_sp=None):
             all_sp = nx.shortest_path(G)
 
     r_g = 3
-
 
     vertices = list(nx.nodes(G))
 

@@ -71,10 +71,14 @@ def computeScalingFactor(S, all_sp):
     return scale
 
 
-def stress(S, G=None, weighted=True):
+def stress(S, G=None, weighted=True, all_sp=None):
     '''Computes the strees of the layout <tt>S</tt> if the parameter <tt>G</tt>
     is passed it computes the stress of the layout <tt>S</tt>
     with respect the graph distances on <tt>G</tt>'''
+
+    S = nx.Graph(S)
+    if G is not None:
+        G = nx.Graph(G)
 
 
     # converting weights in float
@@ -93,30 +97,31 @@ def stress(S, G=None, weighted=True):
 
     alpha = 1
 
-    all_sp = None
 
-    if(G is None):
-        if(weighted):
-            all_sp = nx.shortest_path(S, weight="weight")
+
+    if all_sp is None:
+        if(G is None):
+            if(weighted):
+                all_sp = nx.shortest_path(S, weight="weight")
+            else:
+                all_sp = nx.shortest_path(S)
         else:
-            all_sp = nx.shortest_path(S)
-    else:
-        # converting weights in float
-        all_weights_n = nx.get_node_attributes(G, "weight")
-        for nk in all_weights_n.keys():
-            all_weights_n[nk] = float(all_weights_n[nk])
-        nx.set_node_attributes(G, all_weights_n, "weight")
+            # converting weights in float
+            all_weights_n = nx.get_node_attributes(G, "weight")
+            for nk in all_weights_n.keys():
+                all_weights_n[nk] = float(all_weights_n[nk])
+            nx.set_node_attributes(G, all_weights_n, "weight")
 
-        all_weights_e = nx.get_edge_attributes(G, "weight")
-        for ek in all_weights_e.keys():
-            all_weights_e[ek] = float(all_weights_e[ek])
-        nx.set_edge_attributes(G, all_weights_e, "weight")
+            all_weights_e = nx.get_edge_attributes(G, "weight")
+            for ek in all_weights_e.keys():
+                all_weights_e[ek] = float(all_weights_e[ek])
+            nx.set_edge_attributes(G, all_weights_e, "weight")
 
-        all_sp = None
-        if(weighted):
-            all_sp = nx.shortest_path(G, weight="weight")
-        else:
-            all_sp = nx.shortest_path(G)
+            all_sp = None
+            if(weighted):
+                all_sp = nx.shortest_path(G, weight="weight")
+            else:
+                all_sp = nx.shortest_path(G)
 
     alpha = computeScalingFactor(S_original, all_sp)
 
