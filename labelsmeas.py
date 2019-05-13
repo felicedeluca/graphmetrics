@@ -4,7 +4,7 @@ import math
 import decimal
 
 
-global_labels_scaling_factor = 72
+global_labels_scaling_factor = 1
 
 def boundingBox(G):
 
@@ -84,6 +84,9 @@ def totLabelsOverlappingArea(G, labelsscalingfactor=global_labels_scaling_factor
 
     for u_index in range(0, len(nodes)):
 
+        if u_index not in widths.keys():
+            continue
+
         u = nodes[u_index]
         u_width = float(widths[u])*labelsscalingfactor
         u_height = float(heights[u])*labelsscalingfactor
@@ -91,6 +94,9 @@ def totLabelsOverlappingArea(G, labelsscalingfactor=global_labels_scaling_factor
         u_y = float(all_pos[u].split(",")[1])
 
         for v_index in range(u_index+1, len(nodes)):
+
+            if v_index not in widths.keys():
+                continue
 
             v = nodes[v_index]
             v_width = float(widths[v])*labelsscalingfactor
