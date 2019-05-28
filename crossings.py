@@ -1,7 +1,35 @@
 # import math
 import networkx as nx
+import math
 
 label_factor_magnifier = 72
+
+
+def getAngleLineSegDegree(x1,y1,x2,y2,p_int_x,p_int_y):
+    '''
+        Computes the angular resolution of two intersecting edges (in degree).
+        x1,y1 belong to one edge
+        x2, y2 belong to the other edge
+        p_int_x, p_int_y are the intersection point
+    '''
+
+    dc1x = x1-p_int_x
+    dc2x = x2-p_int_y
+    dc1y = y1-y3
+    dc2y = y2-y3
+
+    norm1 = math.sqrt(math.pow(dc1x,2) + math.pow(dc1y,2))
+    norm2 = math.sqrt(math.pow(dc2x,2) + math.pow(dc2y,2))
+
+    if norm1==0 or norm2==0:
+        return -1
+
+    theta = math.acos((dc1x*dc2x + dc1y*dc2y)/(norm1*norm2))
+
+    if theta > math.pi/2.0:
+        theta = math.pi - theta
+
+    return to_deg(theta)
 
 # Given three colinear points p, q, r, the function checks if
 # point q lies on line segment 'pr'
@@ -11,7 +39,7 @@ def onSegment(px, py, qx, qy, rx, ry):
     return False
 
 def strictlyOnSegment(px, py, qx, qy, rx, ry):
-    if (qx < max(px, rx) and qx > min(px, rx) and qy < max(py, ry) and qy > min(py, ry)):
+    if (qx <= max(px, rx) and qx >= min(px, rx) and qy <= max(py, ry) and qy >= min(py, ry)):
         intersection_point = (qx, qy)
         return (True, intersection_point)
     return (False, None)
@@ -54,34 +82,34 @@ def doSegmentsIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
     o3 = orientation(p2x, p2y, q2x, q2y, p1x, p1y)
     o4 = orientation(p2x, p2y, q2x, q2y, q1x, q1y)
 
-    #if(o1==0 or o2==0 or o3==0 or o4==0):return False
-    # General case
-    if (o1 != o2 and o3 != o4):
-        intersection_point = compute_intersection_point(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
-        return (True, intersection_point)
-
     # Special Cases
     # p1, q1 and p2 are colinear and p2 lies on segment p1q1
     if (o1 == 0 and onSegment(p1x, p1y, p2x, p2y, q1x, q1y)):
         intersection_point = (p2x, p2y)
-        return (True, intersection_point)
+        return (True, intersection_point, 'O')
 
     # p1, q1 and p2 are colinear and q2 lies on segment p1q1
     if (o2 == 0 and onSegment(p1x, p1y, q2x, q2y, q1x, q1y)):
         intersection_point = (q2x, q2y)
-        return (True, intersection_point)
+        return (True, intersection_point, 'O')
 
     # p2, q2 and p1 are colinear and p1 lies on segment p2q2
     if (o3 == 0 and onSegment(p2x, p2y, p1x, p1y, q2x, q2y)):
         intersection_point =  (p1x, p1y)
-        return (True, intersection_point)
+        return (True, intersection_point, 'O')
 
     # p2, q2 and q1 are colinear and q1 lies on segment p2q2
     if (o4 == 0 and onSegment(p2x, p2y, q1x, q1y, q2x, q2y)):
         intersection_point = (q1x, q1y)
-        return (True, intersection_point)
+        return (True, intersection_point, 'O')
 
-    return (False, None) # Doesn't fall in any of the above cases
+    #if(o1==0 or o2==0 or o3==0 or o4==0):return False
+    # General case
+    if (o1 != o2 and o3 != o4):
+        intersection_point = compute_intersection_point(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
+        return (True, intersection_point, 'I')
+
+    return (False, None, '') # Doesn't fall in any of the above cases
 
 def isSameCoord(x1, y1, x2, y2):
     if x1==x2 and y1==y2:
@@ -117,27 +145,24 @@ def isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
 # then it checks whether they are colinear
 # finally it checks the segment intersection
 def doIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-    if areEdgesAdjacent(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-        if isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-            (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, p2x, p2y, q1x, q1y)
-            if intersection_exists:
-                return (intersection_exists, intersection_point)
-
-            (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, q2x, q2y, q1x, q1y)
-            if intersection_exists:
-                return (intersection_exists, intersection_point)
-
-            (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, p1x, p1y, q2x, q2y)
-            if intersection_exists:
-                return (intersection_exists, intersection_point)
-
-            (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, q1x, q1y, q2x, q2y)
-            if intersection_exists:
-                return (intersection_exists, intersection_point)
-            else:
-                return (False, None)
+    # if areEdgesAdjacent(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
+    if isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
+        (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, p2x, p2y, q1x, q1y)
+        if intersection_exists:
+            return (intersection_exists, intersection_point, 'C')
+        (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, q2x, q2y, q1x, q1y)
+        if intersection_exists:
+            return (intersection_exists, intersection_point, 'C')
+        (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, p1x, p1y, q2x, q2y)
+        if intersection_exists:
+            return (intersection_exists, intersection_point, 'C')
+        (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, q1x, q1y, q2x, q2y)
+        if intersection_exists:
+            return (intersection_exists, intersection_point, 'C')
         else:
-            return (False, None)
+            return (False, None, '')
+    # else: //collinear
+    #     return (False, None, '') //collinear
     return doSegmentsIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
 
 def getIntersection(x11, y11, x12, y12, x21, y21, x22, y22):
@@ -182,22 +207,28 @@ def to_deg(rad):
 
 # x1,y1 is the 1st pt, x2,y2 is the 2nd pt, x3,y3 is the intersection pt
 def getAngleLineSegDegree(x1,y1,x2,y2,x3,y3):
-    #print('x1:'+str(x1)+',y1:'+str(y1)+',x2:'+str(x2)+',y2:'+str(y2)+',x3:'+str(x3)+',y3:'+str(y3))
-    # Uses dot product
-    dc1x = x1-x3
-    dc2x = x2-x3
-    dc1y = y1-y3
-    dc2y = y2-y3
-    norm1 = math.sqrt(math.pow(dc1x,2) + math.pow(dc1y,2))
-    norm2 = math.sqrt(math.pow(dc2x,2) + math.pow(dc2y,2))
-    if norm1==0 or norm2==0:
-        return -1
-    angle = math.acos((dc1x*dc2x + dc1y*dc2y)/(norm1*norm2))
-    # if angle > math.pi/2.0:
-    #  angle = math.pi - angle
-    #print('angle:'+str(angle))
-    #return angle
-    return to_deg(angle)
+
+    angle = float('-inf')
+    try:
+        #print('x1:'+str(x1)+',y1:'+str(y1)+',x2:'+str(x2)+',y2:'+str(y2)+',x3:'+str(x3)+',y3:'+str(y3))
+        # Uses dot product
+        dc1x = x1-x3
+        dc2x = x2-x3
+        dc1y = y1-y3
+        dc2y = y2-y3
+        norm1 = math.sqrt(math.pow(dc1x,2) + math.pow(dc1y,2))
+        norm2 = math.sqrt(math.pow(dc2x,2) + math.pow(dc2y,2))
+        if norm1==0 or norm2==0:
+            return -1
+        angle = math.acos((dc1x*dc2x + dc1y*dc2y)/(norm1*norm2))
+        # if angle > math.pi/2.0:
+        #  angle = math.pi - angle
+        #print('angle:'+str(angle))
+        #return angle
+        return to_deg(angle)
+    except Exception as e:
+        angle = float('-inf')
+        return angle
 
 # x1,y1 is the 1st pt, x2,y2 is the 2nd pt, x3,y3 is the intersection pt
 def getAngleLineSeg(x1,y1,x2,y2,x3,y3):
@@ -219,7 +250,6 @@ def getAngleLineSeg(x1,y1,x2,y2,x3,y3):
 
 
 def compute_intersection_point(x_1, y_1, x_2, y_2, x_3, y_3, x_4, y_4):
-
     '''
     Computes the intersection point
     Note that the intersection point is for the infinitely long lines defined by the points,
@@ -420,10 +450,13 @@ def count_crossings(G, edges_to_compare=None, stop_when_found=False, ignore_labe
             p2x, p2y = float(ppos2.split(",")[0]), float(ppos2.split(",")[1])
             q2x, q2y = float(qpos2.split(",")[0]), float(qpos2.split(",")[1])
 
-            (intersection_exists, intersection_point) = doIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
+            (intersection_exists, intersection_point, type) = doIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
             if(intersection_exists):
-
-                crossings_edges.append((edge1, edge2, intersection_point))
+                (intersection_x, intersection_y) = intersection_point
+                crossing_angle = getAngleLineSegDegree(p1x, p1y, p2x, p2y,intersection_x, intersection_y)
+                if type == 'C':
+                    crossing_angle = 0
+                crossings_edges.append((edge1, edge2, intersection_point, crossing_angle))
                 count = count + 1
 
                 if stop_when_found:
