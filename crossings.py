@@ -145,24 +145,24 @@ def isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
 # then it checks whether they are colinear
 # finally it checks the segment intersection
 def doIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-    # if areEdgesAdjacent(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-    if isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
-        (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, p2x, p2y, q1x, q1y)
-        if intersection_exists:
-            return (intersection_exists, intersection_point, 'C')
-        (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, q2x, q2y, q1x, q1y)
-        if intersection_exists:
-            return (intersection_exists, intersection_point, 'C')
-        (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, p1x, p1y, q2x, q2y)
-        if intersection_exists:
-            return (intersection_exists, intersection_point, 'C')
-        (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, q1x, q1y, q2x, q2y)
-        if intersection_exists:
-            return (intersection_exists, intersection_point, 'C')
-        else:
-            return (False, None, '')
-    # else: //collinear
-    #     return (False, None, '') //collinear
+    if areEdgesAdjacent(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
+        if isColinear(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y):
+            (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, p2x, p2y, q1x, q1y)
+            if intersection_exists:
+                return (intersection_exists, intersection_point, 'C')
+            (intersection_exists, intersection_point) =  strictlyOnSegment(p1x, p1y, q2x, q2y, q1x, q1y)
+            if intersection_exists:
+                return (intersection_exists, intersection_point, 'C')
+            (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, p1x, p1y, q2x, q2y)
+            if intersection_exists:
+                return (intersection_exists, intersection_point, 'C')
+            (intersection_exists, intersection_point) =  strictlyOnSegment(p2x, p2y, q1x, q1y, q2x, q2y)
+            if intersection_exists:
+                return (intersection_exists, intersection_point, 'C')
+            else:
+                return (False, None, '')
+        else: #//collinear
+            return (False, None, '') #//collinear
     return doSegmentsIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
 
 def getIntersection(x11, y11, x12, y12, x21, y21, x22, y22):
