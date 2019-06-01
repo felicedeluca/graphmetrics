@@ -66,6 +66,8 @@ computing the stress measurement.
 
 $$ ST = \sum_{i,j \in V} w_{ij}(\parallel p_i - p_j \parallel - d_{ij})^2$$
 
+This measure takes into account the weights of the edges given as 'weight' attribute.
+
 
 
 
@@ -74,6 +76,8 @@ $$ ST = \sum_{i,j \in V} w_{ij}(\parallel p_i - p_j \parallel - d_{ij})^2$$
 The neighbors preservation checks for each vertex how many neighbors are close to it
 in the given layout. This value is the range $[0, 1]$ such that 0 means that the adjacecies
 of the vertices are not respected in the layout while 1 means that all the neighbors of a vertex are close to it in the layout.
+
+This measure takes into account the weights of the edges given as 'weight' attribute.
 
 
 
