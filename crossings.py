@@ -39,7 +39,7 @@ def onSegment(px, py, qx, qy, rx, ry):
     return False
 
 def strictlyOnSegment(px, py, qx, qy, rx, ry):
-    if (qx <= max(px, rx) and qx >= min(px, rx) and qy <= max(py, ry) and qy >= min(py, ry)):
+    if (qx < max(px, rx) and qx > min(px, rx) and qy < max(py, ry) and qy > min(py, ry)):
         intersection_point = (qx, qy)
         return (True, intersection_point)
     return (False, None)
@@ -451,6 +451,7 @@ def count_crossings(G, edges_to_compare=None, stop_when_found=False, ignore_labe
             q2x, q2y = float(qpos2.split(",")[0]), float(qpos2.split(",")[1])
 
             (intersection_exists, intersection_point, type) = doIntersect(p1x, p1y, q1x, q1y, p2x, p2y, q2x, q2y)
+
             if(intersection_exists):
                 (intersection_x, intersection_y) = intersection_point
                 crossing_angle = getAngleLineSegDegree(p1x, p1y, p2x, p2y,intersection_x, intersection_y)
