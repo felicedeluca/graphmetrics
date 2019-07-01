@@ -24,12 +24,21 @@ graph_name = input_file_name.split(".")[0]
 
 G = nx_read_dot(graphpath)
 
+print(nx.info(G))
+
+largest_cc = max(nx.connected_components(G), key=len)
+
+G = G.subgraph(largest_cc)
+
+
+
 # Remove Multiple Edges
 if nx.is_directed(G):
     G = nx.DiGraph(G)
 else:
     G = nx.Graph(G)
 
+G = nx.Graph(G)
 cmds=[]
 all = False
 
