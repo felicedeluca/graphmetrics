@@ -14,6 +14,7 @@ import uniformity_edge_length as uniedgelen
 import other_measures as othermeas
 import labelsmeas
 import upwardflow
+import ksymmetry
 
 
 graphpath = sys.argv[1]
@@ -24,7 +25,6 @@ graph_name = input_file_name.split(".")[0]
 
 G = nx_read_dot(graphpath)
 
-print(nx.info(G))
 
 largest_cc = max(nx.connected_components(G), key=len)
 
@@ -41,6 +41,8 @@ else:
 G = nx.Graph(G)
 cmds=[]
 all = False
+
+print(sys.argv)
 
 if len(sys.argv) > 3 :
     cmds = sys.argv[3].split(",")
@@ -60,6 +62,7 @@ bb =  ('bb' in cmds) #bounding box
 lblo = ('lblo' in cmds) #labels overlaping area
 upflow =  ('upflow' in cmds) #upward flow
 area =  ('area' in cmds) #upward flow
+symmetry = ('sym' in cmds) # reflectional symmetry
 
 output_txt = "Metrics for " + graph_name + "\n"
 output_txt = nx.info(G) + "\n"
@@ -121,7 +124,7 @@ if np or all:
     csv_line += str(neigpres_val) + ";"
     print(output_line)
 
-if lblbb or all:
+if lblbb:
     labelsBBRatio_val = labelsmeas.labelsBBRatio(G)
     output_line =  "lblbb: " + str(labelsBBRatio_val)
     output_txt += output_line + "\n"
@@ -130,7 +133,7 @@ if lblbb or all:
     print(output_line)
 
 
-if lblarea or all:
+if lblarea:
     totLabelsArea_val = labelsmeas.totLabelsArea(G)
     output_line =  "lblarea: " + str(totLabelsArea_val)
     output_txt += output_line + "\n"
@@ -158,7 +161,7 @@ if area or all:
     csv_line += str(value) + ";"
     print(output_line)
 
-if lblo or all:
+if lblo:
     value = labelsmeas.totLabelsOverlappingArea(G)
     output_line =  "lblo: " + str(value)
     output_txt += output_line + "\n"
@@ -172,6 +175,14 @@ if upflow:
     output_txt += output_line + "\n"
     csv_head_line += "upflow;"
     csv_line += str(upflow_val) + ";"
+    print(output_line)
+
+if symmetry:
+    value = ksymmetry.get_symmetric_score(G)
+    output_line =  "symmetry: " + str(value)
+    output_txt += output_line + "\n"
+    csv_head_line += "symmetry;"
+    csv_line += str(value) + ";"
     print(output_line)
 
 

@@ -81,6 +81,13 @@ This measure takes into account the weights of the edges given as 'weight' attri
 
 
 
+##### Symmetry
+Computes the score of reflectional symmetric score with respect using the Klapaukh metric (Java is required)
+https://link.springer.com/chapter/10.1007/978-3-319-91376-6_71
+https://github.com/klapaukh/GraphAnalyser
+
+
+
 # Usage
 
     python3 metricscomputer.py {input_graph_path.dot} {input_metrics_path.csv} [{desired_metrics_comma_separated} ]
@@ -102,6 +109,7 @@ possible values for the metrics are
     lblarea   : for labels total area;
     bb        : for bounding box;
     upflow    : for upward flow;
+    sym       : for symmetry score;
 
 example
 
