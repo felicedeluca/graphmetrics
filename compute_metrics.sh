@@ -1,7 +1,7 @@
 #!/bin/bash
 
-for file in "/Users/felicedeluca/Developer/UofA/gdcontest/dags_med/drawings/dotalgorithm"/*.dot
+for file in "/Users/felicedeluca/Desktop/forestsDA"/*.dot
 do
   echo "$file"
-  python3 metricscomputer.py "$file"  "/Users/felicedeluca/Developer/UofA/gdcontest/dags_med/drawings/dotalgorithm/measures.txt" "upflow,st"
+  python3 metricscomputer.py "$file"  "/Users/felicedeluca/Desktop/forestsDA/measures_sym.txt" "ue"
 done

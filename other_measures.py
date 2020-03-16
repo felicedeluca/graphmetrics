@@ -9,6 +9,23 @@ def vertex_degree(G):
 
     return degree
 
+def areaerror(G, referenceArea=10):
+
+    area = computearea(G)
+
+
+    return abs(referenceArea-area)
+
+
+def computearea(G):
+
+    (width, height) = boundingBox(G)
+
+    area = width*height
+
+    return area
+
+
 
 def boundingBox(G):
 

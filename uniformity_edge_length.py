@@ -45,6 +45,7 @@ def uniformity_edge_length(G):
     edges = nx.edges(G)
     edge_count = len(edges)
     avgEdgeLength = avg_edge_length(G)
+    print(avgEdgeLength)
     tot_sum = 0.0
 
     pos_dict = nx.get_node_attributes(G, 'pos')
