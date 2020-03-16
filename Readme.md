@@ -18,6 +18,7 @@ The project is tested on python3
 * Aspect ratio
 * Stress
 * Neighbors preservation
+* Symmetry
 
 _Labels metrics_
 * Labels total area
