@@ -36,7 +36,7 @@ def euclidean_distance(source, target):
 def find_graph_closest_nodes(G, r_g, sourceStr, all_sp):
     closest = []
     # vertices = list(nx.nodes(G))
-    # source = G.node[sourceStr]
+    # source = G.nodes[sourceStr]
     # for i in range(0, len(vertices)):
     for target in nx.nodes(G):
         if(target == sourceStr):
@@ -51,14 +51,14 @@ def find_space_closest_nodes(Gnx, k_i, sourceStr):
 
     closest = []
     vertices = list(nx.nodes(Gnx))
-    source = Gnx.node[sourceStr]
+    source = Gnx.nodes[sourceStr]
 
     closest_dict = dict()
 
     for i in range(0, len(vertices)):
 
         targetStr = vertices[i]
-        target = Gnx.node[targetStr]
+        target = Gnx.nodes[targetStr]
 
         if(target == source):
             continue
@@ -113,7 +113,7 @@ def compute_neig_preservation(G, weighted=True, all_sp=None):
     for i in range(0, len(vertices)):
 
         sourceStr = vertices[i]
-        source = G.node[sourceStr]
+        source = G.nodes[sourceStr]
 
 
         graph_neighbors = find_graph_closest_nodes(G, r_g, sourceStr, all_sp)

@@ -69,9 +69,9 @@ def compute_zigzagness(G):
                 v2Identifier = sp[secondIndex]
                 v3Identifier = sp[thirdIndex]
 
-                v1 = G.node[v1Identifier]
-                v2 = G.node[v2Identifier]
-                v3 = G.node[v3Identifier]
+                v1 = G.nodes[v1Identifier]
+                v2 = G.nodes[v2Identifier]
+                v3 = G.nodes[v3Identifier]
 
                 v1_x = float(v1['pos'].split(",")[0])
                 v1_y = float(v1['pos'].split(",")[1])
