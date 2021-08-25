@@ -52,8 +52,8 @@ def compute_distance_on_graph(G, s_id, t_id):
             s_id = sp[s_index]
             t_id = sp[t_index]
 
-            s = G.node[s_id]
-            t = G.node[t_id]
+            s = G.nodes[s_id]
+            t = G.nodes[t_id]
 
             curr_length += compute_euclidean_distance(s, t)
 
@@ -80,8 +80,8 @@ def compute_smoothness(G):
             s_id = leaves[s_index]
             t_id = leaves[t_index]
 
-            s = G.node[s_id]
-            t = G.node[t_id]
+            s = G.nodes[s_id]
+            t = G.nodes[t_id]
 
             curr_distance = compute_euclidean_distance(s, t)
             path_distance = compute_distance_on_graph(G, s_id, t_id)
