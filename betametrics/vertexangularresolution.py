@@ -26,7 +26,7 @@ def shiftVertex(vertex, dx, dy):
 
 def translateGraph(G, translation_dx, translation_dy):
     for currVertex in nx.nodes(G):
-        shiftVertex(G.node[currVertex], translation_dx, translation_dy)
+        shiftVertex(G.nodes[currVertex], translation_dx, translation_dy)
     return G
 
 
@@ -42,8 +42,8 @@ def computeSectorsAngles(G, centralVertex):
 
     for currN in set(nx.all_neighbors(G, centralVertex)):
 
-        v1 = G.node[centralVertex]
-        v2 = G.node[currN]
+        v1 = G.nodes[centralVertex]
+        v2 = G.nodes[currN]
 
         v1_x, v1_y = getCoordinate(v1)
         v2_x, v2_y = getCoordinate(v2)
@@ -78,9 +78,9 @@ def computeSectorsAngles(G, centralVertex):
         v1_id = angle_dict[first_slope][0]
         v2_id = angle_dict[next_slope][0]
 
-        center = G.node[centralVertex]
-        v1 = G.node[v1_id]
-        v2 = G.node[v2_id]
+        center = G.nodes[centralVertex]
+        v1 = G.nodes[v1_id]
+        v2 = G.nodes[v2_id]
 
         angular_resolution = next_slope-first_slope
 
@@ -113,7 +113,7 @@ def compute(G):
             continue
 
         # Translate Drawing for convenience
-        translation_dx, translation_dy = getCoordinate(G.node[currVertex])
+        translation_dx, translation_dy = getCoordinate(G.nodes[currVertex])
         translateGraph(G, -translation_dx, -translation_dy)
 
         # # Extract subcomponents, draw, sacle and attach it to the widest sector

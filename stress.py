@@ -20,7 +20,7 @@ def scale_graph(G, alpha):
 
     for currVStr in nx.nodes(H):
 
-        currV = H.node[currVStr]
+        currV = H.nodes[currVStr]
 
         x = float(currV['pos'].split(",")[0])
         y = float(currV['pos'].split(",")[1])
@@ -41,7 +41,7 @@ def computeScalingFactor(S, all_sp):
     for i in range(0, len(nodes)):
 
         sourceStr = nodes[i]
-        source = S.node[sourceStr]
+        source = S.nodes[sourceStr]
 
         for j in range(i+1, len(nodes)):
 
@@ -134,7 +134,7 @@ def stress(S, G=None, weighted=True, all_sp=None):
     for i in range(0, len(vertices)):
 
         sourceStr = vertices[i]
-        source = S.node[sourceStr]
+        source = S.nodes[sourceStr]
 
         for j in range(i+1, len(vertices)):
 
